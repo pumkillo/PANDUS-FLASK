@@ -1,0 +1,15 @@
+{% extends 'signup.html' %}
+{% block form %}
+<img src="../static/img/background.png" alt="Панды">
+<form  method="post" class="form">
+    <p>Авторизация</p>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="psw" placeholder="Пароль" required>
+    <p id="check"><input type="checkbox" name="remainme"> Запомнить меня?</p>
+    <a href="{{url_for('signup')}}">Ещё не зарегистрированны?</a>
+    {% for cat, msg in get_flashed_messages(True) %}
+    <div class="flash-{{cat}}">{{msg}}</div>
+    {% endfor %}
+    <input type="submit" name="submit" value="Войти">
+</form>
+{% endblock form %}

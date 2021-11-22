@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link type="Image/x-icon" href="../static/img/favicon.ico" rel="icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/styles.css') }}">
+    <title>{{title}}</title>
+</head>
+<body>
+    <script src="{{ url_for('static', filename = 'js/script.js') }}" defer></script>
+    <div class="header">
+        <div class="links">
+            <a href="{{ url_for('main') }}"><p>Главная</p></a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('create_post') }}"><p>Создать пост</p></a>
+            <a href="{{ url_for('profile', id_user = current_user.getId()) }}"><p>Профиль</p></a>
+            <a href="{{ url_for('logout') }}" id="logout"><p>Выйти</p></a>
+            {% endif %} 
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('signup') }}"><p>Зарегистрироваться</p></a>
+            <a href="{{ url_for('login') }}"><p>Войти</p></a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="content">
+    {% block content %}
+    {% for post in postsusers %}
+    <div class="post">
+        <div class="title-post">
+            <div class="miniava"><img src="{{ url_for('userava', id_user = post['id_user']) }}" alt=""></div>
+            <div class="name-time">
+                <a href="{{ url_for('profile', id_user = post['id_user']) }}">{{ post['name'] }} {{ post['surname'] }}</a>
+                <p>{{ post['time'] }}</p>
+            </div>
+        </div>
+        <div class="content-text">
+            <a href="{{ url_for('post', id_post = post['id_post']) }}" id="post-title">{{ post['title'] }}</a>
+            <div class="text">
+                {% for string in post['post_text'].replace('\r', '').split('\n') %}
+                <p>{{ string }}</p>
+                {% endfor %}
+            </div>
+            {% if post['img'] %}
+            <div class="post-image"><img src="{{ url_for('image', id_post = post['id_post']) }}" alt="Картинка поста"></div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    {% endblock content %}
+</body>
+</html> 

@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="content">
+    <div class="profile">
+        <div id="avatar"><img src="{{ url_for('userava', id_user = user['id_user']) }}" alt="Аватарка"></div>
+        <div class="name-time">
+            <a href="{{ url_for('profile', id_user = user['id_user']) }}">{{ user['name'] }} {{ user['surname'] }}</a>
+            {% if settings %}
+            <p><a href="{{url_for('settings')}}">Настройки</a></p>
+            {% endif %}
+        </div>
+        <div class="about">
+            {% for string in user['about'].replace('\r', '').split('\n') %}
+            <p>{{ string }}</p>
+            {% endfor %}
+        </div>
+    </div>
+{% for post in posts_user %}
+    <div class="post">
+        <div class="title-post">
+            <div class="miniava"><img src="{{ url_for('userava', id_user = user['id_user']) }}" alt=""></div>
+            <div class="name-time">
+                <a href="{{ url_for('profile', id_user = user['id_user']) }}">{{ user['name'] }} {{ user['surname'] }}</a>
+                <p>{{ post['time'] }}</p>
+            </div>
+        </div>
+        <div class="content-text">
+            <a href="{{ url_for('post', id_post = post['id_post']) }}" id="post-title">{{ post['title'] }}</a>
+            <div class="text">
+                {% for string in post['post_text'].replace('\r', '').split('\n') %}
+                <p>{{ string }}</p>
+                {% endfor %}
+            </div>
+            {% if post['img'] %}
+            <div class="post-image"><img src="{{ url_for('image', id_post = post['id_post']) }}" alt="Картинка поста"></div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock content %}

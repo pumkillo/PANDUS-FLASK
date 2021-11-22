@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="profile_settings">
+    <div id="avatar"><img src="{{ url_for('userava', id_user = current_user.getId()) }}" alt="Аватарка"></div>
+    <form action="/upload/" method="post" enctype="multipart/form-data" id="change-avatar"> 
+        <input type="file" name="image" accept="image/jpeg,image/png" id="file">
+        <input type="submit" value="Изменить аватарку">
+    </form>
+
+    <form action="/edit-inf/" method="post" id="edit-info">
+        <input type="text" name="id" value="{{ current_user.getId() }}">
+        <input type="text" name="name" value="{{ current_user.getName() }}">
+        <input type="text" name="surname" value="{{ current_user.getSurname() }}">
+        <input type="text" name="email" value="{{ current_user.getEmail() }}" disabled id="disabled">
+        <input type="text" name="about" value="{{ current_user.getAbout() }}">
+        {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash-{{cat}}">{{msg}}</div>
+        {% endfor %}
+        <input type="submit" value="Сохранить изменения">
+    </form>
+    <div class="hr"></div>
+    <div id="delete-user">
+        <a href="{{ url_for('deleteUser') }}">Удалить аккаунт</a>
+    </div>
+</div>
+{% endblock content %}

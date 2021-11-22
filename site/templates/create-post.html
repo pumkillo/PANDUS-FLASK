@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="create-post">
+    <form action="/create-post/" method="post" enctype="multipart/form-data">
+        <input type="text" name="title" maxlength="40" placeholder="Название поста" required>
+        <textarea name="post_text" maxlength="500" placeholder="Текст поста" required></textarea>
+        <input type="file" name="image" accept="image/jpeg,image/png" id="file">
+        {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash-{{cat}}">{{msg}}</div>
+        {% endfor %}
+        <input type="submit" value="Создать пост">
+    </form>
+</div>
+{% endblock content %}  

@@ -1,0 +1,61 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="post">
+    <div class="title-post">
+        <div class="miniava"><img src="{{ url_for('userava', id_user = postuser['id_user']) }}" alt=""></div>
+        <div class="name-time">
+            <a href="{{ url_for('profile', id_user = postuser['id_user']) }}">{{ postuser['name'] }} {{ postuser['surname'] }}</a>
+            <p>{{ postuser['time'] }}</p>
+        </div>
+    </div>
+    <div class="content-text">
+        <a href="{{ url_for('post', id_post = postuser['id_post']) }}" id="post-title">{{ postuser['title'] }}</a>
+        <div class="text">
+            {% for string in postuser['post_text'].replace('\r', '').split('\n') %}
+            <p>{{ string }}</p>
+            {% endfor %}
+        </div>
+        {% if postuser['img'] %}
+        <div class="post-image"><img src="{{ url_for('image', id_post = postuser['id_post']) }}" alt="Картинка поста"></div>
+        {% endif %}
+        {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash-{{cat}}">{{msg}}</div>
+        {% endfor %}
+        <form action="/{{ postuser['id_post'] }}/comment/" method="post">
+            <textarea name="comment" placeholder="Написать комментарий..." id="text-comment"></textarea>
+            <button type="submit" id="send-button"><img src="{{ url_for('static', filename = 'img/send.png') }}" alt=""></button>
+        </form>
+    </div>
+
+    <div class="comments">
+        {% for comment in comments %}
+        <div class="comment" id="{{ comment['id_comment'] }}">
+            <div class="title-comment">
+                <div class="miniava-comment"><img src="{{ url_for('userava', id_user = comment['id_user']) }}" alt="Аватарка"></div>
+                <div class="name-time">
+                    <a href="{{ url_for('profile', id_user = comment['id_user']) }}">{{ comment['name'] }} {{ comment['surname'] }}</a>
+                    <p>{{ comment['time'] }}</p>
+                </div>
+                {% if comment['id_user'] == current_user.getId() %}
+                <div class="comments-buttons">
+                    <a href="{{ url_for('deleteCom', id_comment = comment['id_comment'], id_post = comment['id_post']) }}"><img src="{{ url_for('static', filename = 'img/delete.png') }}" alt="Удалить комментарий"></a>
+                    <div onclick="editCom( {{ postuser['id_post'] }}, {{ comment['id_comment'] }}, `{{ comment['comment_text'] }}` )"  id="editbutton">
+                        <img src="{{ url_for('static', filename = 'img/edit.png') }}" alt="Редактировать комментарий">
+                    </div>
+                </div>
+            {% endif %}
+            </div>
+            <div class="text">
+                {% for string in comment['comment_text'].replace('\r', '').split('\n') %}
+                <p>{{ string }}</p>
+                {% endfor %}
+            </div>
+            
+        </div>
+        <div class="hr"></div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
+<button type="submit"><img src="../static/img/save.png" alt=""></button>
